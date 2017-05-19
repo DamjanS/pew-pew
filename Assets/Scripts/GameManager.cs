@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public bool canBeatLevel = false;
 	public int beatLevelScore=0;
 
-	public float startTime=5.0f;
+	public float startTime=120.0f;
 	
 	public Text mainScoreDisplay;
 	public Text mainTimerDisplay;
@@ -57,16 +57,17 @@ public class GameManager : MonoBehaviour {
 			playAgainButtons.SetActive (false);
 
 		// inactivate the nextLevelButtons gameObject, if it is set
-		if (nextLevelButtons)
-			nextLevelButtons.SetActive (false);
+		//if (nextLevelButtons)
+		//	nextLevelButtons.SetActive (false);
 	}
 
 	// this is the main game event loop
 	void Update () {
 		if (!gameIsOver) {
-			if (canBeatLevel && (score >= beatLevelScore)) {  // check to see if beat game
-				BeatLevel ();
-			} else if (currentTime < 0) { // check to see if timer has run out
+			//if (canBeatLevel && (score >= beatLevelScore)) {  // check to see if beat game
+			//	BeatLevel ();
+			//} else 
+			if (currentTime < 0) { // check to see if timer has run out
 				EndGame ();
 			} else { // game playing state, so update the timer
 				currentTime -= Time.deltaTime;
