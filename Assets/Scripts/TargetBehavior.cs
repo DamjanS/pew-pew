@@ -37,6 +37,15 @@ public class TargetBehavior : MonoBehaviour
 				
 			// destroy self
 			Destroy (gameObject);
+
+		} else if (newCollision.gameObject.tag == "Player") {
+			// if game manager exists, make adjustments based on target properties
+			if (GameManager.gm) {
+				GameManager.gm.killPlayer ();
+			}
+
+			// destroy self
+			Destroy (gameObject);
 		}
 	}
 }

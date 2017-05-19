@@ -11,11 +11,17 @@ public class GameManager : MonoBehaviour {
 	// public variables
 	public int score=0;
 
+	//public enum gameStates {Playing, Death, GameOver};
+	//public gameStates gameState = gameStates.Playing;
+
+	[Tooltip("If not set, the player will default to the gameObject tagged as Player.")]
+	public GameObject player;
+
 	public bool canBeatLevel = false;
 	public int beatLevelScore=0;
 
-	public float startTime=120.0f;
-	
+	public int startTime;
+
 	public Text mainScoreDisplay;
 	public Text mainTimerDisplay;
 
@@ -33,17 +39,27 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject restartGameButtons;
 
-	private float currentTime;
+	//private float currentTime;
+	//private Health playerHealth;
+	private bool playerIsAlive = true;
 
 	// setup the game
 	void Start () {
 
 		// set the current time to the startTime specified
-		currentTime = startTime;
+		//currentTime = startTime;
 
 		// get a reference to the GameManager component for use by other scripts
 		if (gm == null) 
 			gm = this.gameObject.GetComponent<GameManager>();
+
+		if (player == null) {
+			player = GameObject.FindWithTag("Player");
+		}
+
+		playerIsAlive = true;
+		//playerHealth = player.GetComponent<Health>();
+
 
 		// init scoreboard to 0
 		mainScoreDisplay.text = "0";
@@ -63,29 +79,51 @@ public class GameManager : MonoBehaviour {
 
 	// this is the main game event loop
 	void Update () {
+		/*
+		switch (gameState)
+		{
+		case gameStates.Playing:
+			if (playerHealth.isAlive == false)
+			{
+				// update gameState
+				gameState = gameStates.Death;
+
+			} 
+			break;
+		case gameStates.Death:
+			EndGame ();
+			//gameState = gameStates.GameOver;
+			break;
+		case gameStates.GameOver:
+			//EndGame ();
+			break;
+		}
+		*/
+		
+
+
 		if (!gameIsOver) {
+			if (playerIsAlive == false) {
+				DestroyAllObjects ();
+				EndGame ();
+			}
 			//if (canBeatLevel && (score >= beatLevelScore)) {  // check to see if beat game
 			//	BeatLevel ();
 			//} else 
-			if (currentTime < 0) { // check to see if timer has run out
-				EndGame ();
-			} else { // game playing state, so update the timer
-				currentTime -= Time.deltaTime;
-				mainTimerDisplay.text = currentTime.ToString ("0.00");				
-			}
 		}
 	}
 
 	void EndGame() {
 		// game is over
 		gameIsOver = true;
+		//gameState = gameStates.GameOver;
 
 		// repurpose the timer to display a message to the player
-		mainTimerDisplay.text = "GAME OVER";
+		mainScoreDisplay.text = "GAME OVER, SCORE " + score;
 
 		// activate the gameOverScoreOutline gameObject, if it is set 
-		if (gameOverScoreOutline)
-			gameOverScoreOutline.SetActive (true);
+		//if (gameOverScoreOutline)
+		//	gameOverScoreOutline.SetActive (true);
 	
 		// activate the playAgainButtons gameObject, if it is set 
 		if (playAgainButtons)
@@ -101,25 +139,18 @@ public class GameManager : MonoBehaviour {
 		if (musicAudioSource)
 			musicAudioSource.pitch = 0.5f; // slow down the music
 	}
-	
-	void BeatLevel() {
-		// game is over
-		gameIsOver = true;
 
-		// repurpose the timer to display a message to the player
-		mainTimerDisplay.text = "LEVEL COMPLETE";
+	void DestroyAllObjects()
+	{
+		GameObject[] gameObjects = GameObject.FindGameObjectsWithTag ("Enemy");
+		for(var i = 0 ; i < gameObjects.Length ; i ++)
+		{
+			Destroy(gameObjects[i]);
+		}
+	}
 
-		// activate the gameOverScoreOutline gameObject, if it is set 
-		if (gameOverScoreOutline)
-			gameOverScoreOutline.SetActive (true);
-
-		// activate the nextLevelButtons gameObject, if it is set 
-		if (nextLevelButtons)
-			nextLevelButtons.SetActive (true);
-		
-		// reduce the pitch of the background music, if it is set 
-		if (musicAudioSource)
-			musicAudioSource.pitch = 0.5f; // slow down the music
+	public void killPlayer () {
+		playerIsAlive = false;
 	}
 
 	// public function that can be called to update the score or time
@@ -130,14 +161,14 @@ public class GameManager : MonoBehaviour {
 		mainScoreDisplay.text = score.ToString ();
 		
 		// increase the time by the timeAmount
-		currentTime += timeAmount;
+		//currentTime += timeAmount;
 		
 		// don't let it go negative
-		if (currentTime < 0)
-			currentTime = 0.0f;
+		//if (currentTime < 0)
+		//	currentTime = 0.0f;
 
 		// update the text UI
-		mainTimerDisplay.text = currentTime.ToString ("0.00");
+		//mainTimerDisplay.text = currentTime.ToString ("0.00");
 	}
 
 	// public function that can be called to restart the game
