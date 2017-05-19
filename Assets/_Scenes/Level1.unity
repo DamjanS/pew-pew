@@ -264,12 +264,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secondsBetweenSpawning: 1
-  xMinRange: -25
-  xMaxRange: 25
-  yMinRange: -25
-  yMaxRange: 25
-  zMinRange: -25
-  zMaxRange: 25
+  xMinRange: -20
+  xMaxRange: 20
+  yMinRange: -5
+  yMaxRange: 10
+  zMinRange: -20
+  zMaxRange: 20
   spawnObjects:
   - {fileID: 1349872862990176, guid: 1f44bcbd3dc5c4c3297eb0f2844ed26a, type: 2}
 --- !u!4 &134254408
@@ -1069,6 +1069,8 @@ MonoBehaviour:
   projectile: {fileID: 190490, guid: 3b093e58f7fe44d1e9dcadb70bfeb99c, type: 2}
   power: 100
   shootSFX: {fileID: 8300000, guid: c96ad3bbb7e994ae782d9a1f782e4d9b, type: 3}
+  keywords:
+  - pew
 --- !u!1001 &1307376025
 Prefab:
   m_ObjectHideFlags: 0

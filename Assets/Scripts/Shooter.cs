@@ -1,20 +1,55 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Windows.Speech;
+using System.Collections.Generic;
+using System.Text;
+using System;
 
 public class Shooter : MonoBehaviour {
 
 	// Reference to projectile prefab to shoot
 	public GameObject projectile;
 	public float power = 10.0f;
-	
+
 	// Reference to AudioClip to play
 	public AudioClip shootSFX;
-	
+
+	private KeywordRecognizer keywordRecognizer;
+
+	[SerializeField]
+	private string[] keywords = new string[1] { "pew" };
+	private bool pewCalled = false;
+
+	void Start () {
+		//keywordRecognizer = new KeywordRecognizer (keywords.Keys.ToString ());
+		keywordRecognizer = new KeywordRecognizer (keywords);
+		keywordRecognizer.OnPhraseRecognized += KeywordRecognizerOnPhraseRecognized;
+		keywordRecognizer.Start ();
+	}
+
+	void KeywordRecognizerOnPhraseRecognized(PhraseRecognizedEventArgs args) {
+		pewCalled = true;
+		StringBuilder builder = new StringBuilder();
+		builder.AppendFormat("{0} ({1}){2}", args.text, args.confidence, Environment.NewLine);
+		builder.AppendFormat("\tTimestamp: {0}{1}", args.phraseStartTime, Environment.NewLine);
+		builder.AppendFormat("\tDuration: {0} seconds{1}", args.phraseDuration.TotalSeconds, Environment.NewLine);
+		Debug.Log(builder.ToString());
+	}
+
+	private void PewIsCalled() {
+		print ("Pew!!!");
+		pewCalled = true;
+	}
+		
 	// Update is called once per frame
 	void Update () {
 		// Detect if fire button is pressed
-		if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Jump"))
+		if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Jump") || pewCalled)
 		{	
+			if (pewCalled && !(Input.GetButtonDown("Fire1") || Input.GetButtonDown("Jump"))) {
+				pewCalled = false;
+			}
+
 			// if projectile is specified
 			if (projectile)
 			{
